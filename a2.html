@@ -1,0 +1,233 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Assignment 2 - Report</title>
+        <meta charset='utf-8'/>
+        <link rel="stylesheet" type="text/css" href="./a2.html_files/github-markdown.css">
+        <style>
+            .markdown-body {
+                box-sizing: border-box;
+                min-width: 200px;
+                max-width: 980px;
+                margin: 0 auto;
+                padding: 45px;
+            }
+        </style>
+        <script>
+            window.onload = function() {
+                if (document.querySelector("script[type=\"math/tex; mode=display\"]") !== null) {
+                    var mathjax = document.createElement("script");
+                    mathjax.src = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML";
+                    document.head.appendChild(mathjax);
+                }
+                if (document.getElementsByTagName("code").length !== 0) {
+                    var highlight = document.createElement("script");
+                    var highlightcss = document.createElement("link");
+                    highlight.src = "http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.2.0/highlight.min.js";
+                    highlightcss.rel = "stylesheet";
+                    highlightcss.href = "http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.2.0/styles/github.min.css";
+                    highlight.onload = function() {hljs.initHighlighting();};
+                    document.head.appendChild(highlight);
+                    document.head.appendChild(highlightcss);
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <article class="markdown-body">
+            <h1 id="assignment-2-report">Assignment 2 - Report</h1>
+<h2 id="lo-shu-magic-square">Lo Shu Magic Square</h2>
+<p>Lo Shu Magic Square is a square where if &quot;n&quot; is the number of rows and columns, then sum of every row, column and diagonal is n(n^2+1)/2.</p>
+<h2 id="loshumagicsquare-program">LoShuMagicSquare Program</h2>
+<p>LoShuMagicSquare is a program that takes the dimension of a square and the elements of the square as input from user and determines whether the given square is Lo Shu Magic Square.</p>
+<h2 id="loshumagicsquare-program-work-procedure">LoShuMagicSquare Program Work Procedure</h2>
+<h3 id="1-loshumagicsquare-class">1. <code>LoShuMagicSquare</code> Class</h3>
+<p>LoShuMagicSquare class is the main class of LoShuMagicSquare program. The <code>main</code> method of this program is inside this class.</p>
+<pre><code>public class LoShuMagicSquare {
+
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+
+        int n;
+        System.out.print(&quot;Please enter the desired grid dimension: &quot;);
+        n = input.nextInt();
+
+        int[][] square = new int[n][n];
+        System.out.println(&quot;Please enter the desired input:\n&quot;);
+        for(int i = 0; i &lt; n; i++) {
+            for(int j = 0; j &lt; n; j++) {
+                square[i][j] = input.nextInt();
+            }
+        }
+
+        LoShuMagicCheck lsmc = new LoShuMagicCheck();
+
+        System.out.println();
+        System.out.println(lsmc.magicCheck(square, n));
+        System.out.println();
+        System.out.println(&quot;Thank you.&quot;);
+    }
+
+}
+</code></pre><h4 id="1-1-main-method">1.1 <code>main</code> Method</h4>
+<p>First statement of the <code>main</code> method creates an object <code>input</code> of the <code>java.util.Scanner</code> class.</p>
+<pre><code>Scanner input = new Scanner(System.in);
+</code></pre><p>Then a variable <code>n</code> of type <code>int</code> is declared, value of <code>n</code> is the dimension of the square. Next two statements takes the value of <code>n</code> as input from user.</p>
+<pre><code>int n;
+System.out.print(&quot;Please enter the desired grid dimension: &quot;);
+n = input.nextInt();
+</code></pre><p>After taking the value of <code>n</code> from user, a two dimensional array of type <code>int[][]</code> of size <code>n</code>x<code>n</code> is declared and its elements are taken as input from the user. Nested <code>for</code> loops are used for taking the value of elements as input.</p>
+<pre><code>int[][] square = new int[n][n];
+System.out.println(&quot;Please enter the desired input:\n&quot;);
+for(int i = 0; i &lt; n; i++) {
+    for(int j = 0; j &lt; n; j++) {
+        square[i][j] = input.nextInt();
+    }
+}
+</code></pre><p>Then an object <code>lsmc</code> of the class <code>LoShuMagicCheck</code> was created. Next <code>println</code> statements prints the output of the program. The statement <code>System.out.println(lsmc.magicCheck(square, n));</code> prints the <code>String</code> returned by the method <code>magicCheck()</code> of the <code>LoShuMagicCheck</code> class, for the argument <code>square</code> and <code>n</code>, <code>magicCheck()</code> determines whether the square has been taken from user as input is a Lo Shu Magic Square.</p>
+<pre><code>LoShuMagicCheck lsmc = new LoShuMagicCheck();
+
+System.out.println();
+System.out.println(lsmc.magicCheck(square, n));
+System.out.println();
+System.out.println(&quot;Thank you.&quot;);
+</code></pre><h3 id="2-loshumagiccheck-class">2. <code>LoShuMagicCheck</code> Class</h3>
+<p>LoShuMagicCheck class contains the definition of the method <code>magicCheck(int[][] sq, int d)</code>, which method determines whether the two dimensional array <code>sq</code> of size <code>dm</code>x<code>dm</code> is a Lo Shu Magic Square.</p>
+<p><code>magicCheck()</code> method takes <code>sq</code> of type <code>int[][]</code> and <code>dm</code> of type <code>int</code> as argument and returns a <code>String</code>.</p>
+<pre><code>class LoShuMagicCheck {
+
+    String magicCheck(int[][] sq, int dm) {
+        int magicNumber = (dm * ((dm * dm) + 1)) / 2;
+
+        int sumOfDiagDown = 0, sumOfDiagUp = 0;
+
+        for(int i = 0; i &lt; dm; i++) {
+            int sumOfRow = 0, sumOfCol = 0;
+
+            for(int j = 0; j &lt; dm; j++) {
+                sumOfRow += sq[i][j];
+                sumOfCol += sq[j][i];
+            }
+
+            if ((sumOfRow != magicNumber) || (sumOfCol != magicNumber)) {
+                return &quot;This is not a Lo Shu Magic Square.&quot;;
+            }
+
+            sumOfDiagDown += sq[i][i];
+            sumOfDiagUp += sq[i][dm - (i + 1)];
+        }
+
+        if ((sumOfDiagDown != magicNumber) || (sumOfDiagUp != magicNumber)) {
+            return &quot;This is not a Lo Shu Magic Square.&quot;;
+        }
+        else {
+            return &quot;This is a Lo Shu Magic Square.\nAnd, the magic number is &quot; + magicNumber + &quot;.&quot;;
+        }
+    }
+}
+</code></pre><h4 id="2-1-magiccheck-method">2.1 <code>magicCheck()</code> Method</h4>
+<p>The first statement of this method evaluates the magic number for <code>dm</code> with the formula n(n^2+1)/2.</p>
+<pre><code>int magicNumber = (dm * ((dm * dm) + 1)) / 2;
+</code></pre><p>Then two variables <code>sumOfDiagUp</code> and <code>sumOfDiagDown</code> of type <code>int</code> was declared and initialized with value <code>0</code>. This variables will contain the sum of the elements of two diagonals of the two dimensional array <code>sq</code>.</p>
+<pre><code>int sumOfDiagDown = 0, sumOfDiagUp = 0;
+</code></pre><p>Then a <code>for</code> loop is used to get the sum of every row, column and diagonal. A variable <code>i</code> of type <code>int</code> is declared and is initialized with the value <code>0</code>. The iteration of the <code>for</code> loop will continue as long as the value of <code>i</code> is lesser than <code>dm</code>. <code>1</code> is added to the value of <code>i</code> after each iteration by <code>i++</code>.</p>
+<pre><code>for(int i = 0; i &lt; dm; i++) {
+    int sumOfRow = 0, sumOfCol = 0;
+
+    for(int j = 0; j &lt; dm; j++) {
+        sumOfRow += sq[i][j];
+        sumOfCol += sq[j][i];
+    }
+
+    if ((sumOfRow != magicNumber) || (sumOfCol != magicNumber)) {
+        return &quot;This is not a Lo Shu Magic Square.&quot;;
+    }
+
+    sumOfDiagDown += sq[i][i];
+    sumOfDiagUp += sq[i][dm - (i + 1)];
+}
+</code></pre><p>Two variables <code>sumOfRow</code> and <code>sumOfColumn</code> of type <code>int</code> is declared in the first statement inside the <code>for</code> loop, which will contain the sum of all the elements of the row <code>i</code> and column <code>i</code>. This statement is followed by another <code>for</code> loop which is used to get the sum of the row <code>i</code> and the sum of the column <code>i</code>. Then <code>if</code> condition is used to check whether the sum of row <code>i</code> or sum of column <code>i</code> is not equal to <code>magicNumber</code>. If any of them is not equal, then the <code>String</code>, <code>&quot;This is not a Lo Shu Magic Square.&quot;</code> is returned as the return value of the method <code>magicCheck()</code>.</p>
+<pre><code>int sumOfRow = 0, sumOfCol = 0;
+
+for(int j = 0; j &lt; dm; j++) {
+    sumOfRow += sq[i][j];
+    sumOfCol += sq[j][i];
+}
+if ((sumOfRow != magicNumber) || (sumOfCol != magicNumber)) {
+    return &quot;This is not a Lo Shu Magic Square.&quot;;
+}
+</code></pre><p>Next two statements inside the first <code>for</code> loop is used to get the value of <code>sumOfDiagDown</code> and <code>sumOfDiagUp</code>. <code>SumOfDiagDown</code> and <code>SumOfDiagUp</code> are the sum of downward and upward diagonal of <code>sq</code> respectively. After all the iterations of the first <code>for</code> loop <code>sumOfDiagDown</code> and <code>sumOfDiagUp</code> get their exact value.</p>
+<pre><code>sumOfDiagDown += sq[i][i];
+sumOfDiagUp += sq[i][dm - (i + 1)];
+</code></pre><p>The next <code>if</code> condition, after the <code>for</code> loop block is used to check whether the sum of downward diagonal <code>sumOfDiagDown</code> and sum of upward diagonal <code>sumOfDiagUp</code> is not equal to <code>magicNumber</code>. If it is not equal, then the <code>String</code>, <code>&quot;This is not a Lo Shu Magic Square.&quot;</code> is returned as the return value of the method <code>magicCheck()</code>, else <code>&quot;This is a Lo Shu Magic Square.\nAnd, the magic number is &quot; + magicNumber + &quot;.&quot;</code> is returned as the return value.</p>
+<pre><code>if ((sumOfDiagDown != magicNumber) || (sumOfDiagUp != magicNumber)) {
+    return &quot;This is not a Lo Shu Magic Square.&quot;;
+}
+else {
+    return &quot;This is a Lo Shu Magic Square.\nAnd, the magic number is &quot; + magicNumber + &quot;.&quot;;
+}
+</code></pre><h3 id="the-complete-program">The Complete Program</h3>
+<p>import java.util.Scanner;</p>
+<pre><code>public class LoShuMagicSquare {
+
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+
+        int n;
+        System.out.print(&quot;Please enter the desired grid dimension: &quot;);
+        n = input.nextInt();
+
+        int[][] square = new int[n][n];        
+        System.out.println(&quot;Please enter the desired input:\n&quot;);
+        for(int i = 0; i &lt; n; i++) {
+            for(int j = 0; j &lt; n; j++) {
+                square[i][j] = input.nextInt();
+            }
+        }
+
+        LoShuMagicCheck lsmc = new LoShuMagicCheck();
+
+        System.out.println();
+        System.out.println(lsmc.magicCheck(square, n));
+        System.out.println();
+        System.out.println(&quot;Thank you.&quot;);
+    }
+
+}
+
+class LoShuMagicCheck {
+
+    String magicCheck(int[][] sq, int dm) {
+
+        int magicNumber = (dm * ((dm * dm) + 1)) / 2;
+
+        int sumOfDiagDown = 0, sumOfDiagUp = 0;
+
+        for(int i = 0; i &lt; dm; i++) {
+            int sumOfRow = 0, sumOfCol = 0;
+
+            for(int j = 0; j &lt; dm; j++) {
+                sumOfRow += sq[i][j];
+                sumOfCol += sq[j][i];
+            }
+
+            if ((sumOfRow != magicNumber) || (sumOfCol != magicNumber)) {
+                return &quot;This is not a Lo Shu Magic Square.&quot;;
+            }
+
+            sumOfDiagDown += sq[i][i];
+            sumOfDiagUp += sq[i][dm - (i + 1)];            
+        }
+
+        if ((sumOfDiagDown != magicNumber) || (sumOfDiagUp != magicNumber)) {
+            return &quot;This is not a Lo Shu Magic Square.&quot;;
+        }
+        else {
+            return &quot;This is a Lo Shu Magic Square.\nAnd, the magic number is &quot; + magicNumber + &quot;.&quot;;
+        }
+    }
+}
+</code></pre>
+        </article>
+    </body>
+</html>
